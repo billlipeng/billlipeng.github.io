@@ -1,0 +1,111 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/clipboard.js/2.0.6/clipboard.js"></script>
+        <title>
+            Branch Name Formatter
+        </title>
+        <style>
+            .main-header {
+                background-color: #000000;
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+                padding: 24px;
+                margin-bottom: 16px;
+            }
+            .title {
+                font-size: 24px;
+                font-weight: normal;
+            }
+            .app-container {
+                border: 1px solid lightgrey;
+                border-radius: 4px;
+                padding: 12px;
+            }
+            .input {
+                width: 100%;
+                border: 1px solid lightgrey;
+                border-radius: 4px;
+                line-height: 36px;
+                font-size: 24px;
+            }
+            .output-wrap {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .output {
+                margin-right: 12px;
+                flex: 1 1 auto;
+                border: 1px solid lightgrey;
+                border-radius: 4px;
+                line-height: 36px;
+                font-size: 24px;
+            }
+            .copy-btn {
+                border: 1px solid lightgrey;
+                border-radius: 4px;
+                line-height: 36px;
+                padding: 0 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main-header">Branch Name Formatter</div>
+        <div id="app"></div>
+        <script id="app-template" type="x-template">
+            <div class="app-container">
+              <h2 class="title">Branch Name</h2>
+              <input class="input" v-model="value">
+              <h2 class="title">Output</h2>
+              <div class="output-wrap">
+                <input class="output" id="output" :value="formatValue" readOnly>
+                <button class="copy-btn" @click="copy">Copy</button>
+              </div>
+            </div>
+        </script>
+        <script>
+            var root = document.querySelector('#app')
+            new Vue({
+                el: root,
+                template: '#app-template',
+                data: function () {
+                    return {
+                        value: '',
+                    }
+                },
+                mounted: function () {},
+                methods: {
+                    copy: function () {
+                        var value = this.formatValue
+                        var clipboard = new ClipboardJS('.copy-btn', {
+                            text: function () {
+                                return value
+                            },
+                        })
+                        clipboard.on('success', function () {
+                            console.log('Copied!')
+                        })
+                        clipboard.on('error', function () {
+                            console.log(
+                                'copy error, press Ctrl + c because the text is already selected.'
+                            )
+                        })
+                    },
+                },
+                computed: {
+                    formatValue: function () {
+                        return this.value
+                            .replace(/  +/g, ' ')
+                            .split(' ')
+                            .join('-')
+                            .toLocaleLowerCase()
+                    },
+                },
+            })
+        </script>
+    </body>
+</html>
